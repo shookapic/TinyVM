@@ -5,6 +5,7 @@ set(APP_NAME "TinyVM")
 set(SRC_FILES
     src/main.cpp
     src/cpu.cpp
+    src/assembler.cpp
 )
 
 set(INCLUDE_DIRS

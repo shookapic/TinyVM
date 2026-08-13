@@ -9,6 +9,7 @@
 std::vector<std::uint8_t> assemble(const std::string& source) {
     std::ifstream myfile = std::ifstream(source);
     if (!myfile) {
+        std::cout << "error reading file" << std::endl;
         std::cerr << "Unable to open file." << std::endl;
         exit(1);
     }
@@ -54,8 +55,23 @@ std::vector<std::uint8_t> assemble(const std::string& source) {
             std::string source;
 
             iss >> destination >> source;
-
-            // encoder ADD
+            
+            if (destination.size() == 2 &&
+                destination[0] == 'R' &&
+                destination[1] >= '0' &&
+                destination[1] <= '7' &&
+                source.size() == 2 &&
+                source[0] == 'R' &&
+                source[1] >= '0' &&
+                source[1] <= '7') {
+                std::uint8_t dest_index = destination[1] - '0';
+                std::uint8_t src_index = source[1] - '0';
+                bytecode.push_back(static_cast<std::uint8_t>(OP_CODE::ADD));
+                bytecode.push_back(dest_index);
+                bytecode.push_back(src_index);
+                }
+            
         }
     }
+    return bytecode;
 }

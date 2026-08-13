@@ -1,14 +1,11 @@
 #include "cpu.hpp"
+#include "assembler.hpp"
 
 int main(int ac, char** av) {
     CPU cpu;
-    std::vector<std::uint8_t> program = {
-    0x01, 0x03,
-    0x2A, 0x00, 0x00, 0x00,
-    0x00, 0x00, 0x00, 0x00,
-    0x00
-    };
-    cpu.load_program(program);
+    
+
+    cpu.load_program(assemble(av[1]));
     cpu.run();
     cpu.dump_registers();
     return 0;
