@@ -1,18 +1,23 @@
-#include <vector>
-#include <string>
-#include <fstream>
-#include <iostream>
-#include <string>
-#include <sstream>
 #include "cpu.hpp"
+#include "assembler.hpp"
 
-std::vector<std::uint8_t> assemble(const std::string& source) {
-    std::ifstream myfile = std::ifstream(source);
-    if (!myfile) {
-        std::cout << "error reading file" << std::endl;
+Assembly::Assembly(std::string file_path) : filepath(file_path)
+{
+    this->validate_path(file_path);
+    this->parse();
+}
+
+int Assembly::validate_path(std::string file_path) {
+    std::ifstream asmfile(this->filepath);
+    if (!asmfile) {
         std::cerr << "Unable to open file." << std::endl;
         exit(1);
     }
+    return 0;
+}
+
+void Assembly::parse() {
+    std::ifstream myfile = std::ifstream(this->filepath);
     std::vector<std::uint8_t> bytecode;
     std::string line;
     while (std::getline(myfile, line)) {
@@ -71,7 +76,37 @@ std::vector<std::uint8_t> assemble(const std::string& source) {
                 bytecode.push_back(src_index);
                 }
             
+        } else if (instruction == "CMP") {
+            std::string destination;
+            std::string source;
+
+            iss >> destination >> source;
+            if (destination.size() == 2 &&
+                destination[0] == 'R' &&
+                destination[1] >= '0' &&
+                destination[1] <= '7' &&
+                source.size() == 2 &&
+                source[0] == 'R' &&
+                source[1] >= '0' &&
+                source[1] <= '7') {
+                std::uint8_t dest_index = destination[1] - '0';
+                std::uint8_t src_index = source[1] - '0';
+                bytecode.push_back(static_cast<std::uint8_t>(OP_CODE::CMP));
+                bytecode.push_back(dest_index);
+                bytecode.push_back(src_index);
+                }
+
         }
     }
-    return bytecode;
+    this->bytecode = bytecode;
+}
+
+std::vector<std::uint8_t> Assembly::get_bytecode()
+{
+    return this->bytecode;
+}
+
+void Assembly::set_bytecode(std::vector<std::uint8_t> bytecode)
+{
+    this->bytecode = bytecode;
 }

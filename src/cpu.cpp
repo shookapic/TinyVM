@@ -68,6 +68,63 @@ void CPU::execute_instruction() {
                 }
             }
             break;
+        
+        case OP_CODE::SUB:
+            if (this->_pc + 2 <= this->_program.size()) {
+                std::uint8_t destination;
+                std::uint8_t source;
+                destination = _program[_pc];
+                source = _program[_pc + 1];
+                _pc+=2;
+                if (destination < _registers.size() && source < _registers.size()) {
+                    _registers[destination] -= _registers[source];
+                }
+            }
+            break;
+
+        case OP_CODE::DIV:
+            if (this->_pc + 2 <= this->_program.size()) {
+                std::uint8_t destination;
+                std::uint8_t source;
+                destination = _program[_pc];
+                source = _program[_pc + 1];
+                _pc+=2;
+                if (destination < _registers.size() && source < _registers.size()) {
+                    if (_registers[source] == 0) {
+                        std::cerr << "Division by zero forbided." << std::endl;
+                        this->_isRunning = false;
+                        return;
+                    }
+                    _registers[destination] /= _registers[source];
+                }
+            }
+            break;
+
+        case OP_CODE::MUL:
+            if (this->_pc + 2 <= this->_program.size()) {
+                std::uint8_t destination;
+                std::uint8_t source;
+                destination = _program[_pc];
+                source = _program[_pc + 1];
+                _pc+=2;
+                if (destination < _registers.size() && source < _registers.size()) {
+                    _registers[destination] *= _registers[source];
+                }
+            }
+            break;
+        
+        case OP_CODE::CMP:
+            if (this->_pc + 2 <= this->_program.size()) {
+                std::uint8_t destination;
+                std::uint8_t source;
+                destination = _program[_pc];
+                source = _program[_pc + 1];
+                _pc+=2;
+                if (destination < _registers.size() && source < _registers.size()) {
+                    _zeroFlag = _registers[destination] == _registers[source];
+                }
+            }
+            break;
         default:
             std::cerr << "OP_CODE: " << static_cast<int>(decoded_opcode) << " not recognized." << std::endl;
         return;
@@ -80,4 +137,5 @@ void CPU::dump_registers() const {
     }
 
     std::cout << "PC = " << this->_pc << '\n';
+    std::cout << "ZF = " << _zeroFlag << '\n';
 }

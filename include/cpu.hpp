@@ -11,6 +11,10 @@ enum class OP_CODE : std::uint8_t {
     HALT = 0x00,
     MOV  = 0x01,
     ADD  = 0x02,
+    SUB = 0x03,
+    MUL = 0x04,
+    DIV = 0x05,
+    CMP = 0x06
 };
 
 class CPU {
@@ -29,4 +33,5 @@ private:
     std::array<std::uint64_t, 8> _registers;
     std::size_t _pc; // Program Counter
     bool _isRunning = false;
+    bool _zeroFlag = false;
 };
