@@ -14,7 +14,8 @@ enum class OP_CODE : std::uint8_t {
     SUB = 0x03,
     MUL = 0x04,
     DIV = 0x05,
-    CMP = 0x06
+    CMP = 0x06,
+    JMP = 0x07
 };
 
 class CPU {

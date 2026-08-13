@@ -125,6 +125,23 @@ void CPU::execute_instruction() {
                 }
             }
             break;
+        
+        case OP_CODE::JMP:
+            if (_pc + 8 <= this->_program.size()) {
+                std::uint64_t address = 0;
+                for (int i = 0; i < 8; i++) {
+                    address |= static_cast<std::uint64_t>(
+                                        this->_program[this->_pc + i]
+                                        ) << (i * 8);
+                }
+                if (address < this->_program.size()) {
+                    this->_pc = address;
+                } else {
+                    std::cerr << "Invalid jump address." << std::endl;
+                    _isRunning = false;
+                }
+            }
+            break;
         default:
             std::cerr << "OP_CODE: " << static_cast<int>(decoded_opcode) << " not recognized." << std::endl;
         return;

@@ -96,6 +96,26 @@ void Assembly::parse() {
                 bytecode.push_back(src_index);
                 }
 
+        } else if (instruction == "JMP") {
+            std::string value;
+
+            if (!(iss >> value)) {
+                std::cerr << "JMP requires an address.\n";
+                continue;
+            }
+
+            if (value.find_first_not_of("0123456789") != std::string::npos) {
+                std::cerr << "JMP address must be a non-negative number.\n";
+                continue;
+            }
+            bytecode.push_back(static_cast<std::uint8_t>(OP_CODE::JMP));
+            
+            std::uint64_t address = std::stoull(value);
+            for (int i = 0; i < 8; i++) {
+                std::uint8_t byte =
+                static_cast<std::uint8_t>((address >> (i * 8)) & 0xFF);
+                bytecode.push_back(byte);
+            }
         }
     }
     this->bytecode = bytecode;
