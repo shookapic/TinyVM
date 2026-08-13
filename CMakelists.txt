@@ -1,0 +1,15 @@
+cmake_minimum_required(VERSION 3.10)
+
+set(APP_NAME "TinyVM")
+
+set(SRC_FILES
+    src/main.cpp
+    src/cpu.cpp
+)
+
+set(INCLUDE_DIRS
+    include
+)
+
+add_executable(${APP_NAME} ${SRC_FILES})
+target_include_directories(${APP_NAME} PRIVATE ${INCLUDE_DIRS})
